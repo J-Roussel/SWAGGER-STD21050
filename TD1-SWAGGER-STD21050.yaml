@@ -58,6 +58,17 @@ paths:
       operationId: getCourses
       summary: Get all courses
       description: Get all courses with details
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: page_size
+          in: query
+          required: true
+          schema: 
+            type: integer
       responses:
         200: 
           description: List of courses
@@ -69,6 +80,10 @@ paths:
                   $ref: '#/components/schemas/Course'
         400:
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
     post: 
       tags:
         - Courses
@@ -90,17 +105,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/Course'
         400:
-          description: Bad request 
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'           
  /courses/{id}:
     get:
       tags:
         - Courses
-      operationId: getCourses
+      operationId: getSpecifiedCourses
       summary: Get specified course
       description: Get specified course with details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer      
       responses:
         200: 
-          description: List of courses
+          description: course
           content:
             application/json:
               schema:
@@ -109,6 +134,10 @@ paths:
                   $ref: '#/components/schemas/Course'
         400:
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
         
 components:
   schemas:
@@ -117,11 +146,11 @@ components:
       properties:
         name:
           type: string
-          example: "Rakoto"
+          example: "majika"
         birth_date:
           type: string
           format: date
-          example: "2022-01-01"
+          example: "2022-09-30"
     Student:
       allOf:
         - $ref: '#/components/schemas/CreateStudent'
@@ -150,4 +179,16 @@ components:
         id:
           type: integer
           example: 2
+    CoursesId: 
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+      allOf:
+       - $ref: '#/components/schemas/Courses'
+    BadRequest:
+      example:
+        code: 400_BAD_REQUEST
+        message: Parameter are missing
         
